@@ -4185,8 +4185,8 @@ begin
       {9} wbInteger('Loc Alias', itS32, wbPackageLocationAliasToStr, wbAliasToInt),
      {10} wbInteger('Interrupt Data', itU32),
      {11} wbInteger('Packdata Target', itU32),
-     {12} wbByteArray('Unknown', 4, cpIgnore),
-     {13} wbByteArray('Unknown', 4),
+     {12} wbByteArray('Near Self', 4, cpIgnore),
+     {13} wbByteArray('Near Editor Location Cell', 4, cpIgnore),
      {14} wbInteger('Ref Collection Alias', itS32, wbPackageLocationAliasToStr, wbAliasToInt)
     ]),
     wbInteger('Radius', itS32),
@@ -4208,8 +4208,8 @@ begin
       {9} wbInteger('Loc Alias', itS32, wbPackageLocationAliasToStr, wbAliasToInt),
      {10} wbInteger('Interrupt Data', itU32),
      {11} wbInteger('Packdata Target', itU32),
-     {12} wbByteArray('Unknown', 4, cpIgnore),
-     {13} wbByteArray('Unknown', 4),
+     {12} wbByteArray('Near Self', 4, cpIgnore),
+     {13} wbByteArray('Near Editor Location Cell', 4, cpIgnore),
      {14} wbInteger('Ref Collection Alias', itS32, wbPackageLocationAliasToStr, wbAliasToInt)
     ]),
     wbInteger('Radius', itS32),
@@ -4226,7 +4226,7 @@ begin
       {5} 'Interrupt Data',
       {6} 'Self',
       {7} 'Keyword',
-      {8} 'Unknown 8'
+      {8} 'Ref Collection Alias'
       ])
     ).SetDefaultNativeValue(2),
     wbUnion('Target', wbTypeDecider, [
@@ -4236,9 +4236,9 @@ begin
       {3} wbFormIDCk('Keyword', [KYWD, NULL]),
       {4} wbInteger('Alias', itS32, wbPackageLocationAliasToStr, wbAliasToInt),
       {5} wbInteger('Interrupt Data', itU32),
-      {6} wbByteArray('Unknown', 4, cpIgnore),
+      {6} wbByteArray('Self', 4, cpIgnore),
       {7} wbFormIDCk('Keyword', [KYWD, NULL]),
-      {8} wbByteArray('Unknown', 4, cpIgnore)
+      {8} wbInteger('Ref Collection Alias', itS32, wbPackageLocationAliasToStr, wbAliasToInt)
     ]),
     wbInteger('Count / Distance', itS32)
   ]);
@@ -4276,7 +4276,7 @@ begin
         'VATS Targetable',
         'Large Actor Destroys'
       ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-      wbByteArray('Unknown', 2)
+      wbUnused(2)
     ]).SetSummaryKeyOnValue([0, 2])
       .SetSummaryPrefixSuffixOnValue(0,'Health ','')
       .SetSummaryPrefixSuffixOnValue(2,'{','}')
@@ -5324,7 +5324,7 @@ begin
         'Unused 6',
         'Unused 7'
       ])).IncludeFlag(dfCollapsed, wbCollapseFlags)),
-      wbFromVersion(125, wbByteArray('Unknown', 3))
+      wbFromVersion(125, wbByteArray('Entry Types (Unused Upper Bits)', 3, cpIgnore))
     ]).SetOptionalFrom(4));
 
   wbArmorPropertyEnum := wbEnum([
@@ -5678,9 +5678,18 @@ begin
     wbGenericModel,
     wbDEST,
     wbKeywords,
-    wbUnknown(PNAM, cpIgnore, True),
+    wbByteColors(PNAM, 'Marker Color (Unused)').SetRequired,
     wbFormIDCk(SNAM, 'Looping Sound', [SNDR]),
-    wbUnknown(FNAM, cpIgnore, True),
+    wbInteger(FNAM, 'Flags', itU16, wbFlags([
+      'No Displacement',
+      'Ignored by Sandbox',
+      'Unknown 2',
+      'Unknown 3',
+      'Is a Radio',
+      'Is a Lookat Trigger',
+      'Unknown 6'
+    ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      .SetRequired,
     wbFormIDCk(VNAM, 'Voice Type', [VTYP])
   ]);
 
@@ -11265,9 +11274,9 @@ begin
     wbEmpty(NAM0, 'Head Data Marker'),
     wbEmpty(MNAM, 'Male Data Marker'),
     wbStruct(NNAM, 'Male Neck Fat Adjustments Scale', [
-      wbByteArray('Unknown', 4),
       wbFloat('X'),
-      wbFloat('Y')
+      wbFloat('Y'),
+      wbFloat('Z')
     ]),
     wbRArrayS('Male Head Parts', wbHeadPart),
     wbRArray('Male Race Presets', wbFormIDCk(RPRM, 'Preset NPC', [NPC_, NULL])),
@@ -11283,9 +11292,9 @@ begin
     wbEmpty(NAM0, 'Head Data Marker'),
     wbEmpty(FNAM, 'Female Data Marker'),
     wbStruct(NNAM, 'Female Neck Fat Adjustments Scale', [
-      wbByteArray('Unknown', 4),
       wbFloat('X'),
-      wbFloat('Y')
+      wbFloat('Y'),
+      wbFloat('Z')
     ]),
     wbRArrayS('Female Head Parts', wbHeadPart),
     wbRArray('Female Race Presets', wbFormIDCk(RPRF, 'Preset NPC', [NPC_, NULL])),
@@ -11493,16 +11502,17 @@ begin
       wbStruct(XRMR, 'Header', [
         wbInteger('Linked Rooms Count', itU8),
         wbInteger('Flags', itU8, wbFlags([
-          'Unknown 1',
-          'Unknown 2',
-          'Unknown 3',
-          'Unknown 4',
-          'Unknown 5',
-          'Unknown 6',
+          'Linked Rooms Count Bit 8',
+          'Linked Rooms Count Bit 9',
+          'Linked Rooms Count Bit 10',
+          'Linked Rooms Count Bit 11',
+          'Linked Rooms Count Bit 12',
+          'Linked Rooms Count Bit 13',
           'Has Image Space',
           'Has Lighting Template'
         ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-        wbByteArray('Unknown', 2)
+        wbInteger('Master', itU8),
+        wbUnused(1)
       ]),
       wbFormIDCk(LNAM, 'Lighting Template', [LGTM]),
       wbFormIDCk(INAM, 'Image Space', [IMGS]),
@@ -11853,7 +11863,7 @@ begin
           wbFormIDCk(XCZR, 'Reference', sigReferences),
           wbFormIDCk(XCZC, 'Cell', [CELL])
         ]),
-        wbUnknown(XCZA)
+        wbByteArray(XCZA, 'Unused', 0, cpIgnore)
       ])
     ),
 
