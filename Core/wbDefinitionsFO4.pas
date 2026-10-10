@@ -3244,11 +3244,7 @@ begin
     wbFormIDCk(XLYR, 'Layer', [LAYR]),
     wbFormIDCk(XMSP, 'Material Swap', [MSWP]),
     wbFormIDCk(XRFG, 'Reference Group', [RFGP]),
-    wbStruct(XCVR, 'Water Current Zone Data', [
-      wbFloat('Unknown'),
-      wbFloat('Unknown'),
-      wbFloat('Unknown')
-    ]),
+    wbVec3(XCVR, 'Water Current Rotational Velocity'),
     wbXESP,
     wbOwnership,
     wbRagdoll,
@@ -5969,12 +5965,12 @@ begin
       {1}  'Has Water',
       {2}  'Can''t Travel From Here',
       {3}  'No LOD Water',
-      {4}  'Unknown 4',
+      {4}  'Runtime Only (Ignored)',
       {5}  'Public Area',
       {6}  'Hand Changed',
       {7}  'Show Sky',
       {8}  'Use Sky Lighting',
-      {9}  'Unknown 9',
+      {9}  'Warn To Leave',
       {10} 'Hidden from Interior Cell List',
       {11} 'Sunlight Shadows',
       {12} 'Distant LOD only',
@@ -6037,7 +6033,7 @@ begin
 
     wbInteger(CNAM, 'Precombined Object Level XY', itU8),
     wbInteger(ZNAM, 'Precombined Object Level Z', itU8),
-    wbByteArray(TVDT, 'Unknown', 0, cpNormal),
+    wbByteArray(TVDT, 'Terrain Visibility Data', 0, cpNormal),
     wbMHDTCELL,
     wbFormIDCk(LTMP, 'Lighting Template', [LGTM, NULL], False, cpNormal, True),
 
@@ -6106,7 +6102,7 @@ begin
     wbICON,
     wbPRPS,
     wbStruct(DATA, 'Data', [
-      wbUnknown(4),
+      wbByteArray('Service Flags', 4),
       wbFloat('Bleedout Default')
         .SetDefaultEditValue('0.15')
     ]).SetRequired
@@ -6518,7 +6514,7 @@ begin
     // format depends on Form Version (appear with form version 62, changed in form version 106), different for older records starting from the first field
     wbUnion(DNAM, '', wbFormVersionDecider(106), [
       wbStruct('Data (old format)', [
-        wbByteArray('Unknown', 1),
+        wbUnused(1),
         wbInteger('Membrane Shader - Source Blend Mode', itU32, wbBlendModeEnum),
         wbInteger('Membrane Shader - Blend Operation', itU32, wbBlendOpEnum),
         wbInteger('Membrane Shader - Z Test Function', itU32, wbZTestFuncEnum),
@@ -6680,7 +6676,7 @@ begin
         wbFormIDCk('Ambient Sound', [SNDR, NULL]),
         wbByteColors('Fill/Texture Effect - Color Key 2'),
         wbByteColors('Fill/Texture Effect - Color Key 3'),
-        wbInteger('Unknown', itU8).SetDefaultEditValue('4'),
+        wbInteger('Scene Graph Emit Depth Limit', itU8).SetDefaultEditValue('4'),
         wbStruct('Fill/Texture Effect - Color Key Scale/Time', [
           wbFloat('Color Key 1 - Scale').SetDefaultEditValue('1.0'),
           wbFloat('Color Key 2 - Scale').SetDefaultEditValue('1.0'),
@@ -6821,7 +6817,7 @@ begin
       wbInteger('Assault', itU16),
       wbInteger('Trespass', itU16),
       wbInteger('Pickpocket', itU16),
-      wbInteger('Unknown', itU16),
+      wbUnused(2),
       wbFloat('Steal Multiplier'),
       wbInteger('Escape', itU16),
       wbInteger('Werewolf (unused)', itU16)
@@ -6833,12 +6829,11 @@ begin
     wbStruct(VENV, 'Vendor Values', [
       wbInteger('Start Hour', itU16),
       wbInteger('End Hour', itU16).SetDefaultEditValue('24'),
-      wbInteger('Radius', itU16),
-      wbUnknown(2),
+      wbInteger('Radius', itU32),
       wbInteger('Buys Stolen Items', itU8, wbBoolEnum).SetDefaultEditValue('True'),
       wbInteger('Buy/Sell Everything Not In List?', itU8, wbBoolEnum),
       wbInteger('Buys NonStolen Items', itU8, wbBoolEnum).SetDefaultEditValue('True'),
-      wbInteger('Unknown', itU8)
+      wbUnused(1)
     ]).SetRequired,
     wbPLVD,
     wbCITC,
@@ -7999,7 +7994,7 @@ begin
          {3} 'Impale',
          {4} 'Stick'
       ])),
-      wbUnknown(2)
+      wbUnused(2)
     ], cpNormal, True),
     wbDODT,
     wbFormIDCk(DNAM, 'Texture Set', [TXST]),
@@ -9604,7 +9599,7 @@ begin
       wbInteger('Reverb Delay (ms)', itU8),
       wbInteger('Diffusion %', itU8).SetDefaultEditValue('100'),
       wbInteger('Density %', itU8).SetDefaultEditValue('100'),
-      wbInteger('Unknown', itU8)
+      wbUnused(1)
     ], cpNormal, True),
     wbInteger(ANAM, 'Reverb Class', itU32, wbReverbClassEnum, cpNormal, True)
   ]);
@@ -9733,7 +9728,7 @@ begin
           wbFormIDCk('Emotion', [KYWD,FFFF]),
           wbInteger('Response number', itU8),
           wbFormIDCk('Sound File', [SNDR,NULL]),
-          wbByteArray('Unknown', 1),
+          wbInteger('Use Emotion Animation', itU8, wbBoolEnum),
           wbInteger('Interrupt Percentage', itU16),
           wbInteger('Camera Target Alias', itS32),
           wbInteger('Camera Location Alias', itS32)
@@ -9755,7 +9750,7 @@ begin
     wbLStringKC(RNAM, 'Prompt', 0, cpTranslate).IncludeFlagOnValue(dfStringTrim),
     wbFormIDCk(ANAM, 'Speaker', [NPC_]),
     wbFormIDCk(TSCE, 'Start Scene', [SCEN]),
-    wbUnknown(INTV),
+    wbInteger(INTV, 'Start Scene Phase Index', itU32),
     wbInteger(ALFA, 'Forced Alias', itS32),
     wbFormIDCk(ONAM, 'Audio Output Override', [SOPM]),
     wbInteger(GREE, 'Greet Distance', itU32),
@@ -9851,7 +9846,7 @@ begin
       {0x001} 'Has Vertex Normals/Height Map',
       {0x002} 'Has Vertex Colours',
       {0x004} 'Has Layers',
-      {0x008} 'Unknown 4',
+      {0x008} 'Data Loaded (Runtime, Ignored)',
       {0x010} 'Auto-Calc Normals',
       {0x020} 'Has Hi-Res Heightfield',
       {0x040} '',
@@ -9892,9 +9887,9 @@ begin
       wbByteColors('Color'),
       // Omnidirectional is the default type
       wbInteger('Flags', itU32, wbFlags([
-        {0x00000001} 'Unknown 0',
+        {0x00000001} 'Dynamic',
         {0x00000002} 'Can be Carried',
-        {0x00000004} 'Unknown 2',
+        {0x00000004} 'Negative',
         {0x00000008} 'Flicker',
         {0x00000010} 'Unknown 4',
         {0x00000020} 'Off By Default',
@@ -9905,7 +9900,7 @@ begin
         {0x00000400} 'Shadow Spotlight',
         {0x00000800} 'Shadow Hemisphere',
         {0x00001000} 'Shadow OmniDirectional',
-        {0x00002000} 'Unknown 13',
+        {0x00002000} 'Portal-strict',
         {0x00004000} 'NonShadow Spotlight',
         {0x00008000} 'Non Specular',
         {0x00010000} 'Attenuation Only',
@@ -10077,8 +10072,8 @@ begin
            {16} 'Unknown 16',
            {17} 'No Recast',
            {18} 'Unknown 18',
-           {19} 'Unknown 19',
-           {20} 'Unknown 20',
+           {19} 'Difficulty Affects Magnitude',
+           {20} 'Difficulty Affects Duration',
            {21} 'Power Affects Magnitude',
            {22} 'Power Affects Duration',
            {23} 'Unknown 23',
@@ -10550,9 +10545,9 @@ begin
         'Run',
         'Fast Walk'
       ])),
-      wbUnknown(1),
+      wbUnused(1),
       wbInteger('Interrupt Flags', itU16, wbPKDTInterruptFlags).IncludeFlag(dfCollapsed, wbCollapseFlags),
-      wbUnknown(2)
+      wbInteger('Package Specific Flags', itU16)
     ]).SetRequired,
 
     wbStruct(PSDT, 'Schedule', [
@@ -10629,7 +10624,7 @@ begin
               'Run',
               'Fast Walk'
             ])),
-            wbByteArray('Unknown', 3)
+            wbUnused(3)
           ])
         ),
         wbRArray('Unknown', wbUnknown(PFOR), cpIgnore)
@@ -10742,12 +10737,12 @@ begin
       wbStructSK(INDX, [0], 'Stage Index', [
         wbInteger('Stage Index', itU16),
         wbInteger('Flags', itU8, wbFlags([
-          {0x01} 'Unknown 1',
+          {0x01} 'Done (Runtime)',
           {0x02} 'Run On Start',
           {0x04} 'Run On Stop',
           {0x08} 'Keep Instance Data From Here On'
         ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-        wbInteger('Unknown', itU8)
+        wbUnused(1)
       ]).IncludeFlag(dfCollapsed, wbCollapseOther),
       wbRArray('Log Entries', wbRStruct('Log Entry', [
         wbInteger(QSDT, 'Stage Flags', itU8, wbFlags([
@@ -12513,8 +12508,8 @@ begin
     wbStruct(DATA, 'Data', [
       wbInteger('Include Count', itU32, nil, cpBenign).IncludeFlag(dfSkipImplicitEdit),
       wbInteger('Property Count', itU32, nil, cpBenign).IncludeFlag(dfSkipImplicitEdit),
-      wbInteger('Unknown Bool 1', itU8, wbBoolEnum),
-      wbInteger('Unknown Bool 2', itU8, wbBoolEnum),
+      wbInteger('Optional', itU8, wbBoolEnum),
+      wbInteger('Children Exclusive', itU8, wbBoolEnum),
       wbInteger('Form Type', itU32, wbEnum([], [
         Sig2Int(ARMO), 'Armor',
         Sig2Int(NPC_), 'Non-player character',
@@ -12731,25 +12726,14 @@ begin
       wbRStruct('Menu Item', [
         wbLStringKC(ITXT, 'Item Text', 0, cpTranslate),
         wbLStringKC(RNAM, 'Response Text', 0, cpTranslate),
-        wbInteger(ANAM, 'Type', itU8, wbEnum([
-          {0} 'Unknown 0',
-          {1} 'Unknown 1',
-          {2} 'Unknown 2',
-          {3} 'Unknown 3',
-          {4} 'Submenu - Terminal',
-          {5} 'Submenu - Return to Top Level',
-          {6} 'Submenu - Force Redraw',
-          {7} 'Unknown 7',
-          {8} 'Display Text',
-          {9} 'Unknown 9',
-         {10} 'Unknown 10',
-         {11} 'Unknown 11',
-         {12} 'Unknown 12',
-         {13} 'Unknown 13',
-         {14} 'Unknown 14',
-         {15} 'Unknown 15',
-         {16} 'Display Image'
-        ]), cpNormal, True),
+        wbInteger(ANAM, 'Type', itU8, wbFlags([
+          {0x01} 'Return to Top Level',
+          {0x02} 'Force Redraw',
+          {0x04} 'Submenu - Terminal',
+          {0x08} 'Display Text',
+          {0x10} 'Display Image',
+          {0x20} 'Holotape'
+        ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
         wbInteger(ITID, 'Item ID', itU16),
         wbLStringKC(UNAM, 'Display Text', 0, cpTranslate),
         wbString(VNAM, 'Show Image'),
@@ -13051,8 +13035,8 @@ begin
     wbWeatherCloudColors,
     wbWeatherCloudAlphas,
     wbWeatherColors,
-    wbArray(NAM4, 'Unknown',
-      wbFloat('Unknown')
+    wbArray(NAM4, 'Fog Color Scales',
+      wbFloat('Scale')
         .SetDefaultNativeValue(1),
     32).IncludeFlag(dfNotAlignable)
        .SetRequired,
