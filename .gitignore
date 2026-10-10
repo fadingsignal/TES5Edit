@@ -241,3 +241,23 @@ __recovery/*
 /FO76Edit_log.txt
 Temp
 Temp/*
+
+# LLM / AI coding assistant files
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+AGENTS.md
+.codex/
+GEMINI.md
+.gemini/
+.cursor/
+.cursorrules
+.cursorignore
+.windsurf/
+.windsurfrules
+.aider*
+.continue/
+.clinerules
+.roo/
+.github/copilot-instructions.md
