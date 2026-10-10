@@ -7515,9 +7515,9 @@ begin
         {0} 'Mode - Front',
         {1} 'Mode - Back',
         {2} 'No Sky',
-        {3} 'Unknown 3',
-        {4} 'Unknown 4',
-        {5} 'Unknown 5'
+        {3} 'Blur Radius Bit 0',
+        {4} 'Blur Radius Bit 1',
+        {5} 'Blur Radius Bit 2'
         ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
       wbUnused(2),
       wbInteger('Radial Blur Ramp Down', itU32).SetDefaultEditValue('2'),
@@ -12553,8 +12553,8 @@ begin
 
   wbRecord(OVIS, 'Object Visibility Manager', [
     wbEDID,
-    wbRArray('Unknown',
-      wbRStruct('Unknown', [
+    wbRArray('Objects',
+      wbRStruct('Object', [
         wbFormIDCk(INDX, 'Object', [STAT]),
         wbStruct(DATA, 'Object Bounds', [
           wbFloat('X1'),
